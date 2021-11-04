@@ -21,6 +21,8 @@ To start you will need to install the Scripter plugin to your Figma account and 
 The full overview of how to prepare your Figma file is available in this tutorial on Youtube by Farid Sabitov. And the public Figma file with all the details here.
 
 ## How to use 
-In order to use the FigmaPreview widget you will need to know the Figma API token and your component id.
+In order to use the FigmaPreview component you will need to know the Figma API token and your component id.
 
-The component id can be obtained via script insert_component_id.js. You need to run it within your Figma project via Scripter Figma plugin.
+![FigmaToken](https://github.com/vvsevolodovich/jetpack-compose-figma-preview/blob/main/figmatoken.png)
+
+The component id can be obtained via script [insert_component_id.js](https://github.com/vvsevolodovich/flutter_figma_preview/blob/master/insert_component_id.js). You need to run it within your Figma project via Scripter Figma plugin.
