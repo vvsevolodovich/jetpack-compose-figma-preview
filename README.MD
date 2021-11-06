@@ -1,5 +1,5 @@
 
-# Jetpack Compose Flutter Preview 
+# Jetpack Compose Figma Preview 
 A Figma component preview for your Jetpack compose function.
 
 It will obtain the png version of the component from Figma and display a half transparent overlay on top of your component.
