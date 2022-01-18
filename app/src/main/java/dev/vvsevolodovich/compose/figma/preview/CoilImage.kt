@@ -8,6 +8,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import coil.Coil
 import coil.request.ImageRequest
@@ -19,11 +22,13 @@ import kotlinx.coroutines.*
 fun CoilImage(
     model: Any,
     modifier: Modifier = Modifier,
-    customize: ImageRequest.Builder.() -> Unit = {}
+    customize: ImageRequest.Builder.() -> Unit = {},
+    width: Dp? = 300.dp,
+    height: Dp? = 300.dp
 ) {
-    var width = 300
-    var height = 300
-    val image = remember<MutableState<ImageBitmap>> { mutableStateOf(ImageBitmap(width, height)) }
+    val pxWidth = with(LocalDensity.current) { width!!.toPx() }.toInt()
+    val pxHeight = with(LocalDensity.current) { height!!.toPx() }.toInt()
+    val image = remember<MutableState<ImageBitmap>> { mutableStateOf(ImageBitmap(pxWidth, pxHeight)) }
 
     val target = object : Target {
         override fun onSuccess(result: Drawable) {
@@ -34,7 +39,7 @@ fun CoilImage(
     val context = LocalContext.current
     val request = ImageRequest.Builder(context)
         .data(model)
-        .size(width, height)
+        .size(pxWidth, pxHeight)
         .scale(Scale.FILL)
         .target(target)
         .apply { customize(this) }
@@ -44,7 +49,7 @@ fun CoilImage(
     Image(bitmap = image.value, modifier = modifier, contentDescription = "test", alpha = 0.4f)
 
     DisposableEffect(key1 = "dispose1", effect = {
-        image.value = ImageBitmap(width, height)
+        image.value = ImageBitmap(pxWidth, pxHeight)
         onDispose {
             requestDisposable.dispose()
         }

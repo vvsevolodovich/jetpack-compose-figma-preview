@@ -24,7 +24,7 @@ class FigmaClient(val fileId: String, val accessToken: String) {
 
     fun getImage(key: String, callback: (String?) -> Unit) {
         val request = Request.Builder()
-            .url("https://$baseUrl/v1/images/$fileId?ids=$key")
+            .url("https://$baseUrl/v1/images/$fileId?ids=$key&scale=3")
             .header("X-Figma-Token", accessToken)
             .header("Content-Type", "application/json")
             .build()

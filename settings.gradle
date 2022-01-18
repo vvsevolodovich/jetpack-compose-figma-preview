@@ -8,3 +8,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Compose Figma Preview"
 include ':app'
+include ':figmapreviewtestapp'
