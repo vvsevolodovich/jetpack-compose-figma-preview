@@ -1,13 +1,20 @@
 package dev.vvsevolodovich.compose.figma.preview
 
+import android.util.Log
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
+import java.time.Duration
+import java.util.concurrent.TimeUnit
 
 class FigmaClient(val fileId: String, val accessToken: String) {
 
-    val client = OkHttpClient();
-    val baseUrl = "api.figma.com";
+    val client = OkHttpClient.Builder()
+        .connectTimeout(120, TimeUnit.SECONDS)
+        .readTimeout(120, TimeUnit.SECONDS)
+        .writeTimeout(120, TimeUnit.SECONDS).build();
+    val baseUrl = "api.figma.com/v1";
+
 
     /*Future<String> getImages(String key, FigmaQuery query) async =>
     await _getFigma('/images/$key', query);
@@ -22,9 +29,34 @@ class FigmaClient(val fileId: String, val accessToken: String) {
         }
     }*/
 
+    fun searchComponents(fileKey: String, callback: (List<FigmaComponent>?) -> Unit) {
+        val request = Request.Builder()
+            .url("https://$baseUrl/files/$fileKey/components")
+            .header("X-Figma-Token", accessToken)
+            .header("Content-Type", "application/json")
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                callback(arrayListOf())
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful) throw IOException("Unexpected code $response")
+
+                    val jsonString = response.body()!!.string()
+                    val parsedComponents = parseComponents(jsonString)
+                    callback(parsedComponents);
+                }
+            }
+        })
+    }
+
     fun getImage(key: String, callback: (String?) -> Unit) {
         val request = Request.Builder()
-            .url("https://$baseUrl/v1/images/$fileId?ids=$key&scale=3")
+            .url("https://$baseUrl/images/$fileId?ids=$key&scale=3")
             .header("X-Figma-Token", accessToken)
             .header("Content-Type", "application/json")
             .build()
@@ -63,5 +95,39 @@ class FigmaClient(val fileId: String, val accessToken: String) {
                 imageUrl
             }
         }
+    }
+
+    data class FigmaComponent(
+        val key: String,
+        val thumbnailUrl: String,
+        val name: String,
+        val description: String
+    )
+
+    fun parseComponents(jsonString: String): List<FigmaComponent> {
+        val jObject = JSONObject(jsonString)
+        val hasError = jObject.getInt("status") != 200
+        val cmpnts: MutableList<FigmaComponent> = arrayListOf();
+        Log.d("PARSE", jsonString)
+        if (hasError) {
+            val error = jObject.getString("err")
+            print(error)
+        } else {
+            val meta = jObject.getJSONObject("meta")
+            if (!meta.isNull("components")) {
+                val components = meta.getJSONArray("components")
+                (0 until components.length()).forEach {
+                    val c = components.getJSONObject(it)
+                    cmpnts.add(FigmaComponent(
+                        c.getString("key"),
+                        c.getString("thumbnail_url"),
+                        c.getString("name"),
+                        c.getString("description"))
+                    )
+                }
+                Log.d("PARSE", "Size of components is " + cmpnts.size);
+            }
+        }
+        return cmpnts;
     }
 }

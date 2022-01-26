@@ -7,6 +7,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import dev.vvsevolodovich.compose.figma.figmapreviewtestapp.ui.theme.ComposeFigmaPreviewTheme
 import dev.vvsevolodovich.compose.figma.preview.figmaPreviewPreview
+import dev.vvsevolodovich.compose.figma.preview.searchPreview
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,7 +16,8 @@ class MainActivity : ComponentActivity() {
             ComposeFigmaPreviewTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    figmaPreviewPreview()
+                    //figmaPreviewPreview()
+                    searchPreview()
                 }
             }
         }
