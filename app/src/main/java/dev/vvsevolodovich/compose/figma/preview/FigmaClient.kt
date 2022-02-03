@@ -99,6 +99,7 @@ class FigmaClient(val fileId: String, val accessToken: String) {
 
     data class FigmaComponent(
         val key: String,
+        val nodeId: String,
         val thumbnailUrl: String,
         val name: String,
         val description: String
@@ -120,6 +121,7 @@ class FigmaClient(val fileId: String, val accessToken: String) {
                     val c = components.getJSONObject(it)
                     cmpnts.add(FigmaComponent(
                         c.getString("key"),
+                        c.getString("node_id"),
                         c.getString("thumbnail_url"),
                         c.getString("name"),
                         c.getString("description"))

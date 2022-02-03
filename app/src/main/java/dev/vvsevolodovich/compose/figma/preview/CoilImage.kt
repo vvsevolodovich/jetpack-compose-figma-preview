@@ -46,7 +46,7 @@ fun CoilImage(
 
     val requestDisposable = Coil.imageLoader(context).enqueue(request.build())
 
-    Image(bitmap = image.value, modifier = modifier, contentDescription = "test", alpha = 0.4f)
+    Image(bitmap = image.value, modifier = modifier, contentDescription = "test", alpha = 0.7f)
 
     DisposableEffect(key1 = "dispose1", effect = {
         image.value = ImageBitmap(pxWidth, pxHeight)
