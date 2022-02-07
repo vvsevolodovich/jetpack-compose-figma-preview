@@ -15,20 +15,6 @@ class FigmaClient(val fileId: String, val accessToken: String) {
         .writeTimeout(120, TimeUnit.SECONDS).build();
     val baseUrl = "api.figma.com/v1";
 
-
-    /*Future<String> getImages(String key, FigmaQuery query) async =>
-    await _getFigma('/images/$key', query);
-*/
-/*    Future<String> _getFigma(String path, [FigmaQuery query]) async {
-        final uri = Uri.https(base, '$apiVersion$path', query?.figmaQuery);
-        final response = await _sendRequest('GET', uri, _authHeaders);
-        if (response.statusCode >= 200 && response.statusCode < 300) {
-            return response.body;
-        } else {
-            throw FigmaError(code: response.statusCode, message: response.body);
-        }
-    }*/
-
     fun searchComponents(fileKey: String, callback: (List<FigmaComponent>?) -> Unit) {
         val request = Request.Builder()
             .url("https://$baseUrl/files/$fileKey/components")

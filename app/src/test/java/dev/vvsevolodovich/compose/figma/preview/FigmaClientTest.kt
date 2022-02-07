@@ -3,9 +3,11 @@ package dev.vvsevolodovich.compose.figma.preview
 import org.junit.Test
 
 import org.junit.Assert.*
+import org.junit.Ignore
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
+@Ignore
 class FigmaClientTest {
     @Test
     fun shouldParseImageUrlCorrectly() {
